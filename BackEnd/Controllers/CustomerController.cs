@@ -10,9 +10,9 @@ namespace BackEnd.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<Customer, string> _customerRepository;
 
-        public CustomerController(IRepository<Customer> customerRepository)
+        public CustomerController(IRepository<Customer, string> customerRepository)
         {
             _customerRepository = customerRepository;
         }
@@ -31,6 +31,12 @@ namespace BackEnd.Controllers
             });
         }
 
+
+        [HttpGet]
+        public async Task<Customer> GetById(string id)
+        {
+            return await _customerRepository.GetByKey(id);
+        }
 
         [HttpPost]
         public async Task<Customer> Create(Customer customer)

@@ -1,14 +1,12 @@
-﻿using Amazon.Runtime.Internal;
-using BackEnd.Models;
-using BackEnd.Interfaces;
+﻿using BackEnd.Interfaces;
 using BackEnd.Models;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace BackEnd.Repositories
 {
-    public class CustomerRepository : IRepository<Customer>
+    public class CustomerRepository : IRepository<Customer, string>
     {
         private readonly IMongoCollection<Customer> _customersCollection;
 
@@ -37,6 +35,12 @@ namespace BackEnd.Repositories
         public async Task<IEnumerable<Customer>> GetAllAsync()
         {
             List<Customer> result = await _customersCollection.Find(x => true).ToListAsync();
+            return result;
+        }
+
+        public async Task<Customer> GetByKey(string key)
+        {
+            Customer result = await _customersCollection.Find(x => x.Id == key).FirstOrDefaultAsync();
             return result;
         }
 

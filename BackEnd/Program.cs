@@ -1,4 +1,3 @@
-using BackEnd.Models;
 using BackEnd.Interfaces;
 using BackEnd.Models;
 using BackEnd.Repositories;
@@ -14,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
 
-builder.Services.AddTransient<IRepository<Customer>, CustomerRepository>();
+builder.Services.AddTransient<IRepository<Customer, string>, CustomerRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
