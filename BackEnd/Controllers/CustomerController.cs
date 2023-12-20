@@ -27,7 +27,7 @@ namespace BackEnd.Controllers
                 Id = x.Id,
                 Address = x.Address,
                 Name = x.Name,
-                SubscriptionState = x.SubscriptionState,
+                SubscriptionState = GetSubscriptionStateLabel(x.SubscriptionState),
                 InvoiceNumbers = x.Invoices is not null ? x.Invoices.Count : 0
             }));
         }
@@ -35,7 +35,7 @@ namespace BackEnd.Controllers
 
         [HttpGet]
         [Route("GetById")]
-        [ProducesResponseType(typeof(List<Customer>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetById(string id)
         {
             return Ok(await _customerRepository.GetByKey(id));
@@ -55,6 +55,17 @@ namespace BackEnd.Controllers
         public async Task<Customer> Update(Customer customer)
         {
             return await _customerRepository.UpdateAsync(customer);
+        }
+
+        private string GetSubscriptionStateLabel(int subscriptionState)
+        {
+            return subscriptionState switch
+            {
+                0 => "New",
+                1 => "Active",
+                2 => "Suspended",
+                _ => string.Empty,
+            };
         }
     }
 }
