@@ -1,8 +1,7 @@
-﻿using BackEnd.Models;
-using BackEnd.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using BackEnd.Interfaces;
+using BackEnd.Models;
 using BackEnd.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BackEnd.Controllers
 {
@@ -18,30 +17,44 @@ namespace BackEnd.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CustomerVm>> GetAll()
+        [Route("GetAll")]
+        [ProducesResponseType(typeof(List<CustomerVm>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll()
         {
             IEnumerable<Customer> result = await _customerRepository.GetAllAsync();
-            return result.Select(x => new CustomerVm
+            return Ok(result.Select(x => new CustomerVm
             {
                 Id = x.Id,
                 Address = x.Address,
                 Name = x.Name,
                 SubscriptionState = x.SubscriptionState,
                 InvoiceNumbers = x.Invoices is not null ? x.Invoices.Count : 0
-            });
+            }));
         }
 
 
         [HttpGet]
-        public async Task<Customer> GetById(string id)
+        [Route("GetById")]
+        [ProducesResponseType(typeof(List<Customer>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetById(string id)
         {
-            return await _customerRepository.GetByKey(id);
+            return Ok(await _customerRepository.GetByKey(id));
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+        [Route("Create")]
         public async Task<Customer> Create(Customer customer)
         {
             return await _customerRepository.CreateAsync(customer);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(Customer), StatusCodes.Status200OK)]
+        [Route("Update")]
+        public async Task<Customer> Update(Customer customer)
+        {
+            return await _customerRepository.UpdateAsync(customer);
         }
     }
 }

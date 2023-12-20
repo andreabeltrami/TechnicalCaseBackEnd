@@ -1,7 +1,6 @@
 ﻿using BackEnd.Interfaces;
 using BackEnd.Models;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace BackEnd.Repositories
@@ -26,8 +25,6 @@ namespace BackEnd.Repositories
 
         public async Task<Customer> CreateAsync(Customer input)
         {
-            input.Id = ObjectId.GenerateNewId().ToString();
-            input.Invoices.ForEach(x => x.Id = ObjectId.GenerateNewId().ToString());
             await _customersCollection.InsertOneAsync(input);
             return input;
         }
@@ -44,9 +41,10 @@ namespace BackEnd.Repositories
             return result;
         }
 
-        public Task<Customer> UpdateAsync(Customer input)
+        public async Task<Customer> UpdateAsync(Customer input)
         {
-            throw new NotImplementedException();
+            _ = await _customersCollection.ReplaceOneAsync(x => x.Id == input.Id, input);
+            return input;
         }
     }
 }
